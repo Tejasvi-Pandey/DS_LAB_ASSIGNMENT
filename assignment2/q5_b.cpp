@@ -1,3 +1,6 @@
+#include<iostream>
+using namespace std;
+
 class TriDiagonal {
     int n;
     int *A;
@@ -42,4 +45,5 @@ int main() {
     td.set(4,3,9); td.set(4,4,10);
 
     td.display();
+
 }
