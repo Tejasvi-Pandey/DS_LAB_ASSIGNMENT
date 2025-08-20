@@ -1,3 +1,6 @@
+#include<iostream>
+using namespace std;
+
 class LowerTriangular {
     int n;
     int *A;
@@ -38,4 +41,5 @@ int main() {
     lt.set(4,1,7); lt.set(4,2,8); lt.set(4,3,9); lt.set(4,4,10);
 
     lt.display();
+
 }
