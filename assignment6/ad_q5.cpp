@@ -1,76 +1,65 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
 using namespace std;
 
-class Node{
-public:
+struct Node {
     int data;
-    Node *next,*prev,*up,*down;
+    Node *next, *prev, *up, *down;
 
-    Node(int x){
-        data=x;
-        next=prev=up=down=NULL;
+    Node(int val) {
+        data = val;
+        next = prev = up = down = NULL;
     }
 };
 
-Node* convertToDLL(vector<vector<int>> &mat){
-    int r = mat.size();
-    int c = mat[0].size();
+Node* construct(int mat[][3], int R, int C) {
 
-    // Create a node pointer matrix of same size
-    vector<vector<Node*>> node(r, vector<Node*>(c, NULL));
+    // Create a 2D array of Node* to store created nodes
+    Node* nodes[R][C];
 
-    // create all nodes first
-    for(int i=0;i<r;i++){
-        for(int j=0;j<c;j++){
-            node[i][j] = new Node(mat[i][j]);
+    // Step 1: Create all nodes
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            nodes[i][j] = new Node(mat[i][j]);
         }
     }
 
-    // link all pointers
-    for(int i=0;i<r;i++){
-        for(int j=0;j<c;j++){
-            if(j+1 < c) node[i][j]->next = node[i][j+1];   // right
-            if(j-1 >= 0) node[i][j]->prev = node[i][j-1];  // left
-            if(i+1 < r) node[i][j]->down = node[i+1][j];   // down
-            if(i-1 >= 0) node[i][j]->up   = node[i-1][j];  // up
+    // Step 2: Connect the pointers
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+
+            if (j + 1 < C)
+                nodes[i][j]->next = nodes[i][j + 1];
+
+            if (j - 1 >= 0)
+                nodes[i][j]->prev = nodes[i][j - 1];
+
+            if (i + 1 < R)
+                nodes[i][j]->down = nodes[i + 1][j];
+
+            if (i - 1 >= 0)
+                nodes[i][j]->up = nodes[i - 1][j];
         }
     }
 
-    return node[0][0]; // return head (top-left)
+    // Return the head (top-left node)
+    return nodes[0][0];
 }
 
-void displayRowWise(Node *head, int r, int c){
-    Node *row = head;
-    for(int i=0;i<r;i++){
-        Node *col = row;
-        for(int j=0;j<c;j++){
-            cout<<col->data<<" ";
-            col = col->next;
-        }
-        cout<<"\n";
-        row = row->down;
+int main() {
+    int mat[3][3] = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+
+    Node* head = construct(mat, 3, 3);
+
+    // Example: print first row using next pointers
+    Node* temp = head;
+    while (temp) {
+        cout << temp->data << " ";
+        temp = temp->next;
     }
-}
-
-int main(){
-    int r,c;
-    cout<<"Enter rows and columns: ";
-    cin>>r>>c;
-
-    vector<vector<int>> mat(r, vector<int>(c));
-
-    cout<<"Enter matrix values:\n";
-    for(int i=0;i<r;i++){
-        for(int j=0;j<c;j++){
-            cin>>mat[i][j];
-        }
-    }
-
-    Node *head = convertToDLL(mat);
-
-    cout<<"\nDoubly Linked (4-pointers) structure row-wise:\n";
-    displayRowWise(head,r,c);
 
     return 0;
 }
